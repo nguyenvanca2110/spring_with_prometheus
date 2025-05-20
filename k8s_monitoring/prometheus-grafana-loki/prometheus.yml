@@ -1,0 +1,64 @@
+global:
+  scrape_interval: 1m
+
+scrape_configs:
+  - job_name: cadvisor
+    kubernetes_sd_configs:
+      - role: node
+        kubeconfig_file: /etc/prometheus/k8s-config
+    relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - replacement: enfinity-prod-cluster-dns-u6x1ss46.hcp.koreacentral.azmk8s.io:443
+        target_label: __address__
+      - regex: (.+)
+        replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+        source_labels:
+          - __meta_kubernetes_node_name
+        target_label: __metrics_path__
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['10.100.0.172:9100']
+  #  - job_name: 'node-exporter'
+  #    kubernetes_sd_configs:
+  #      - role: endpoints
+  #    relabel_configs:
+  #    - source_labels: [__meta_kubernetes_endpoints_name]
+  #      regex: 'node-exporter'
+  #      action: keep
+
+  #  - job_name: 'kubernetes-nodes'
+  #    scheme: https
+  #    tls_config:
+  #      insecure_skip_verify: true
+  #    kubernetes_sd_configs:
+  #      - role: node
+  #        kubeconfig_file: /etc/prometheus/k8s-config
+  #    relabel_configs:
+  #      - action: labelmap
+  #        regex: __meta_kubernetes_node_label_(.+)
+  - job_name: 'kube-state-metrics'
+    static_configs:
+      - targets: ['10.100.1.0:8085']
+  #    - target_label: __address__
+  #      replacement: 10.13.117.87:6443
+  #    - source_labels: [__meta_kubernetes_node_name]
+  #      regex: (.+)
+  #      target_label: __metrics_path__
+  #      replacement: /api/v1/nodes/${1}/proxy/metrics
+
+
+  #relabel_configs:
+  # - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+  #   action: keep
+  #   regex: default;kubernetes;https
+
+#remote_write:
+#  - url: 'grafana:3000'
+#    basic_auth:
+#      username: 'admin'
+#      password: 'admin

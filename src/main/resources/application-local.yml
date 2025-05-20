@@ -1,0 +1,64 @@
+server:
+  port: 8088
+
+logging:
+  pattern:
+    console: "%(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr(${LOG_LEVEL_PATTERN:%5p}) %clr([%15.15t]){faint} --- %clr(%-40.40logger{39}){blue} %clr(:){faint} %msg%n%throwable"
+  level:
+    root: INFO
+
+---
+spring:
+  namespace: gw
+  application:
+    name: demo
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  main:
+    allow-bean-definition-overriding: true
+  threads:
+    virtual:
+      enabled: true
+
+
+management:
+  security:
+    enabled: false
+  statsd:
+    metrics:
+      export:
+        enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: b3
+      produce: b3_multi
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      org_name: STG-LOCAL-CCS1
+      space_name: ${spring.namespace}
+      app_name: ${spring.application.name}
+      instance: ${spring.cloud.client.ip-address:localhost}
+      cf_instance_id: ${spring.cloud.client.hostname}:${spring.cloud.client.ip-address:localhost}
+  prometheus:
+    metrics:
+      export:
+        pushgateway:
+          enabled: true
+          base-url: http://localhost:9091
+          push-rate: 10s
+          job: ${spring.application.name}:${spring.cloud.client.ip-address:localhost}
+
