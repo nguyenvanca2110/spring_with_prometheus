@@ -1,0 +1,107 @@
+affinity: {}
+automountServiceAccountToken: true
+containerSecurityContext: {}
+extraArgs:
+- --web.enable-admin-api
+- --log.level=error
+extraContainers: []
+extraInitContainers: []
+extraManifests: []
+extraVars: []
+extraVolumeMounts: []
+extraVolumes: []
+fullnameOverride: ""
+hostAliases: []
+image:
+  pullPolicy: IfNotPresent
+  repository: quay.io/prometheus/pushgateway
+  tag: ""
+imagePullSecrets: []
+ingress:
+  className: ""
+  enabled: false
+  extraPaths: []
+  path: /
+  pathType: ImplementationSpecific
+liveness:
+  enabled: true
+  probe:
+    httpGet:
+      path: /-/healthy
+      port: 9091
+    initialDelaySeconds: 10
+    timeoutSeconds: 10
+nameOverride: ""
+namespaceOverride: ""
+networkPolicy: {}
+nodeSelector: {}
+persistentVolume:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  enabled: false
+  existingClaim: ""
+  mountPath: /pdata
+  size: 10Gi
+  subPath: ""
+persistentVolumeLabels: {}
+podAnnotations: {}
+podAntiAffinity: ""
+podAntiAffinityTopologyKey: kubernetes.io/hostname
+podDisruptionBudget: {}
+podLabels: {}
+readiness:
+  enabled: true
+  probe:
+    httpGet:
+      path: /-/ready
+      port: 9091
+    initialDelaySeconds: 10
+    timeoutSeconds: 10
+replicaCount: 1
+resources:
+  limits:
+    cpu: 500m
+    memory: 1024Mi
+  requests:
+    cpu: 500m
+    memory: 1024Mi
+runAsStatefulSet: false
+securityContext:
+  fsGroup: 65534
+  runAsNonRoot: true
+  runAsUser: 65534
+service:
+  clusterIP: ""
+  ipDualStack:
+    enabled: false
+    ipFamilies:
+    - IPv6
+    - IPv4
+    ipFamilyPolicy: PreferDualStack
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  # nodePort: 30010
+  port: 9091
+  portName: http
+  targetPort: 9091
+  type: ClusterIP
+serviceAccount:
+  create: true
+serviceAccountLabels: {}
+serviceAnnotations:
+  prometheus.io/probe: pushgateway
+serviceLabels: {}
+serviceMonitor:
+  additionalLabels: {}
+  enabled: false
+  honorLabels: true
+  metricRelabelings: []
+  namespace: monitoring
+  relabelings: []
+  telemetryPath: /metrics
+strategy:
+  type: Recreate
+tolerations: []
+topologySpreadConstraints: []
+webConfiguration: {}

@@ -1,0 +1,112 @@
+affinity: {}
+automountServiceAccountToken: true
+containerSecurityContext: {}
+extraArgs:
+- --web.enable-admin-api
+- --persistence.interval=5m
+- --log.level=error
+extraContainers: []
+extraInitContainers: []
+extraManifests: []
+extraVars: []
+extraVolumeMounts: []
+extraVolumes: []
+fullnameOverride: ""
+hostAliases: []
+image:
+  pullPolicy: IfNotPresent
+  repository: quay.io/prometheus/pushgateway
+  tag: ""
+imagePullSecrets: []
+ingress:
+  className: ""
+  enabled: false
+  extraPaths: []
+  path: /
+  pathType: ImplementationSpecific
+liveness:
+  enabled: true
+  probe:
+    failureThreshold: 20
+    httpGet:
+      path: /-/healthy
+      port: 9091
+    initialDelaySeconds: 10
+    periodSeconds: 60
+    timeoutSeconds: 60
+nameOverride: ""
+namespaceOverride: ""
+networkPolicy: {}
+nodeSelector: {}
+persistentVolume:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  enabled: false
+  existingClaim: ""
+  mountPath: /pdata
+  size: 1400Gi
+  subPath: ""
+persistentVolumeLabels: {}
+podAnnotations: {}
+podAntiAffinity: ""
+podAntiAffinityTopologyKey: kubernetes.io/hostname
+podDisruptionBudget: {}
+podLabels: {}
+readiness:
+  enabled: true
+  probe:
+    failureThreshold: 20
+    httpGet:
+      path: /-/ready
+      port: 9091
+    initialDelaySeconds: 10
+    periodSeconds: 60
+    timeoutSeconds: 60
+replicaCount: 1
+resources:
+  limits:
+    cpu: 3200m
+    memory: 3Gi
+  requests:
+    cpu: 2900m
+    memory: 3Gi
+runAsStatefulSet: false
+securityContext:
+  fsGroup: 65534
+  runAsNonRoot: true
+  runAsUser: 65534
+service:
+  clusterIP: ""
+  ipDualStack:
+    enabled: false
+    ipFamilies:
+    - IPv6
+    - IPv4
+    ipFamilyPolicy: PreferDualStack
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  nodePort: 31020
+  port: 9091
+  portName: http
+  targetPort: 9091
+  type: NodePort
+serviceAccount:
+  create: true
+serviceAccountLabels: {}
+serviceAnnotations:
+  prometheus.io/probe: pushgateway
+serviceLabels: {}
+serviceMonitor:
+  additionalLabels: {}
+  enabled: false
+  honorLabels: true
+  metricRelabelings: []
+  namespace: monitoring
+  relabelings: []
+  telemetryPath: /metrics
+strategy:
+  type: Recreate
+tolerations: []
+topologySpreadConstraints: []
+webConfiguration: {}
