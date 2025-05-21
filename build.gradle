@@ -46,4 +46,37 @@ dependencies {
 	implementation 'io.prometheus:simpleclient_pushgateway'
 
 }
+// ---- Container image
+jib {
+	from {
+		image = 'openjdk:21'
+	} // Base image for the container
 
+	to {
+		image = "${project.name}" // Output image name and tag
+		// Refer https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin#quickstart
+		auth {
+			username = "*****"
+			password = "*****"
+		}
+		// Optionally, specify a registry: image = 'docker.io/myusername/myapp:latest'
+
+		tags = ["${project.version}", "latest"]
+	}
+
+	container {
+		jvmFlags =['-Dfile.encoding=UTF-8']
+		// JVM arguments mainClass = 'com.example.MyApplication'
+		// Main class of your Spring Boot app ports = ['8080']
+		// Exposed ports creationTime = 'USE_CURRENT_TIMESTAMP'
+		// Set image creation time
+		//   container {
+		//    jvmFlags = ['-Dmy.property=example.value', '-Xms512m', '-Xdebug']
+		//    mainClass = 'mypackage.MyApp'
+		//    args = ['some', 'args']
+		//    ports = ['1000', '2000-2003/udp']
+		//    labels = [key1:'value1', key2:'value2']
+		//    format = 'OCI'
+		//  }
+	}
+}
